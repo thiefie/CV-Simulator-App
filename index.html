@@ -1,0 +1,310 @@
+
+<html>
+<head>
+<title>CircuitVerse - Digital Circuit Simulator online</title>
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="hx7UYihK1Hvpdbj0dOfZT1FXXODkUlVuPVJJYuupm50BmCdxiI3lvPhYoVOe4jXsoVOx9m1tBTH3CQRqf8VpNw==" />
+<link rel="stylesheet" media="all" href="assets/application.css" data-turbolinks-track="reload" />
+<script src="assets/application.js" data-turbolinks-track="reload"></script>
+<link rel="icon" href="img/favicon.ico">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112678513-1"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-112678513-1');
+    </script>
+</head>
+<body>
+<html>
+<head>
+<title>CircuitVerse - Digital Simulator</title>
+</head>
+
+<script src="assets/javascripts/pace.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<body onload="setup()">
+<script>
+    userSignedIn = false;
+    logix_project_id = 0;
+    projectName = ""
+</script>
+<nav class="navbar navbar-default toolbar navbar-inverse">
+<div class="container-fluid">
+
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="/">CircuitVerse</a>
+</div>
+
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<ul class="nav navbar-nav noSelect pointerCursor" id="toolbar">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Project<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li class="toolbarButton logixButton" id="newProject"><a>New Project</a></li>
+<li class="toolbarButton logixButton" id="clearProject"><a>Clear Project</a></li>
+<li class="toolbarButton logixButton" id="save"><a>Save Online</a></li>
+<li class="toolbarButton logixButton" id="saveOffline"><a>Save Offline</a></li>
+<li class="toolbarButton logixButton" id="createOpenLocalPrompt"><a>Open Offline</a></li>
+<li class="toolbarButton logixButton" id="recoverProject"><a>Recover project</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Circuit<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li class="toolbarButton logixButton" id="newCircuit"><a>New Circuit +</a></li>
+<li class="toolbarButton logixButton" id="createSubCircuitPrompt"><a>Insert SubCircuit</a></li>
+</ul>
+</li>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li class="toolbarButton logixButton" id="createCombinationalAnalysisPrompt"><a>Combinational Analysis</a></li>
+<li class="toolbarButton logixButton" id="startPlot"><a>Start Plot</a></li>
+<li class="toolbarButton logixButton" id="createSaveAsImgPrompt"><a>Download Image</a></li>
+</ul>
+</li>
+<li class="">
+<a href="https://docs.circuitverse.org" target="_blank" role="button" aria-haspopup="true" aria-expanded="false">Help</a>
+</li>
+</ul>
+<span class="projectName noSelect defaultCursor font-weight-bold" id="projectName">
+Untitled
+</span>
+<ul class="nav navbar-nav noSelect pointerCursor pull-right">
+<li class="dropdown pull-right">
+<a class="navbar-nav nav-link" href=/users/sign_in> Sign in </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<div>
+<div class="side left" id="sideBar" style="overflow-y: scroll;overflow-x: hidden">
+<div class="modules noSelect defaultCursor">
+<div id="modules-header">Circuit Elements</div>
+<div class="accordion" id="menu">
+</div>
+</div>
+<div class="moduleProperty effect1" id="moduleProperty">
+<div id="moduleProperty-title" class="noSelect pointerCursor">Properties</div>
+<div id="moduleProperty-inner"></div>
+
+</div>
+</div>
+<div class="rightPanel">
+<div id="tabsBar" class="noSelect pointerCursor">
+
+</div>
+<div class="simulation" id="simulation">
+<div id="restrictedDiv" class="alert alert-danger display--none">
+</div>
+<div id="MessageDiv">
+</div>
+<div class="canvasArea" id="canvasArea">
+<canvas id="backgroundArea" style="position: absolute; left: 0; top: 0; z-index: 0; width:100%;height:100%"></canvas>
+<canvas id="simulationArea" style="position: absolute; left: 0; top: 0; z-index: 1; width:100%;height:100%"></canvas>
+<div id="plot">
+<canvas id="plotArea" style="position: absolute; left: 0; top: 0; z-index: 2"></canvas>
+</div>
+<div id="miniMap">
+<canvas id="miniMapArea" style="position: absolute; left:0; top: 0; z-index: 3;"></canvas>
+</div>
+<div id="contextMenu" oncontextmenu="return false;">
+<ul>
+<li onclick="menuItemClicked(2)"><a>Paste</a></li>
+<li onclick="menuItemClicked(0)"><a>Copy</a></li>
+<li onclick="menuItemClicked(1)"><a>Cut</a></li>
+<li onclick="menuItemClicked(3)"><a>Delete</a></li>
+<li onclick="menuItemClicked(4)"><a>Undo</a></li>
+<li onclick="menuItemClicked(5)"><a>New Circuit</a></li>
+<li onclick="menuItemClicked(6)"><a>Insert SubCircuit</a></li>
+<li onclick="menuItemClicked(7)"><a>Center Focus</a></li>
+</ul>
+</div>
+<div id="Help">
+
+</div>
+<div style="position:absolute; right:30px; top:30px; z-index:100">
+<button type="button" class="btn zoomButton btn-lg" onclick="changeScale(0.2,'zoomButton','zoomButton',2)">
+<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+</button>
+</div>
+<div class="sk-folding-cube loadingIcon" style="display:none;position:absolute; right:50%; bottom:50%; z-index:100">
+<div class="sk-cube1 sk-cube"></div>
+<div class="sk-cube2 sk-cube"></div>
+<div class="sk-cube4 sk-cube"></div>
+<div class="sk-cube3 sk-cube"></div>
+</div>
+<div style="position:absolute; right:60px; top:30px; z-index:100">
+<button type="button" class="btn zoomButton btn-lg" onclick="globalScope.centerFocus(false)">
+<span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+</button>
+</div>
+<div style="position:absolute; right:90px; top:30px; z-index:100">
+<button type="button" class="btn zoomButton btn-lg" onclick="changeScale(-0.2,'zoomButton','zoomButton',2)">
+<span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+</button>
+</div>
+<div style="position:absolute; right:120px; top:30px; z-index:100">
+<button type="button" class="btn zoomButton btn-lg" onclick="undo()">
+<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+</button>
+</div>
+<div style="position:absolute; right:150px; top:30px; z-index:100">
+<button type="button" class="btn zoomButton btn-lg" onclick="delete_selected()">
+<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+</button>
+</div>
+<div id="layoutDialog" style="display:none" class="" title="Layout Options">
+<div class="container">
+<div class="panel-heading">Layout options</div>
+<div class="">
+Width:<button type="button" class="btn zoomButton btn-lg" onclick="decreaseLayoutWidth()">
+<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn zoomButton btn-lg" onclick="increaseLayoutWidth()">
+<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+</button>
+</div>
+<div class="">
+Height:<button type="button" class="btn zoomButton btn-lg" onclick="decreaseLayoutHeight()">
+<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn zoomButton btn-lg" onclick="increaseLayoutHeight()">
+<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+</button>
+</div>
+<div class="">
+Reset all nodes:
+<button type="button" class="btn zoomButton btn-lg" onclick="layoutResetNodes()">
+<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+</button>
+</div>
+<div class="">
+Title:
+<button type="button" class="btn zoomButton btn-lg" onclick="layoutTitleUp()">
+<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn zoomButton btn-lg" onclick="layoutTitleDown()">
+<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn zoomButton btn-lg" onclick="layoutTitleLeft()">
+<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn zoomButton btn-lg" onclick="layoutTitleRight()">
+<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+</button>
+</div>
+<div class="">
+<p>Title Enabled : <label class='switch'> <input type='checkbox' checked id="toggleLayoutTitle" onclick="toggleLayoutTitle()"> <span class='slider2'></span> </label></p>
+</div>
+<div class="">
+Save:
+<button type="button" class="btn zoomButton btn-lg" onclick="saveLayout()">
+<span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+</button>
+Cancel:
+<button type="button" class="btn zoomButton btn-lg" onclick="cancelLayout()">
+<span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="combinationalAnalysis" style="display:none;" title="BooleanLogicTable"></div>
+<div id="insertSubcircuitDialog" style="display:none;" title="Insert SubCircuit"></div>
+<div id="openProjectDialog" style="display:none;" title="Open Project"></div>
+</div>
+<div id="saveImageDialog" style="display:none;" title="Render Image">
+<p>
+<label class="option inline"><input type="radio" name="imgType" value="png" checked="checked" />PNG</label>
+<label class="option inline"><input type="radio" name="imgType" value="jpeg" />JPEG</label>
+<label class="option inline"> <input type="radio" name="imgType" value="svg" />SVG</label>
+<label class="option inline"> <input type="radio" name="imgType" value="bmp" />BMP</label>
+<label class="option inline"> <input type="radio" name="imgType" value="gif" />GIF</label>
+<label class="option inline"> <input type="radio" name="imgType" value="tiff" />TIFF</label>
+</p>
+<p>
+<label class="option inline"><input type="radio" name="view" value="full" /> Full Circuit View</label>
+<label class="option inline"> <input type="radio" name="view" value="current" checked="checked" />Current View</label>
+</p>
+<p>
+<label class="option inline"><input type="checkbox" name="transparent" value="transparent" /> Transparent Background</label>
+</p>
+<p>
+Resolution:
+<label class="option inline"> <input type="radio" name="resolution" value="1" checked="checked" />1x</label>
+<label class="option inline"><input type="radio" name="resolution" value="2" /> 2x</label>
+<label class="option inline"> <input type="radio" name="resolution" value="4" />4x</label>
+</p>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+      embed=false;
+
+        restrictedElements = [];
+  </script>
+<script src="assets/javascripts/UX.js"></script>
+
+<script>
+
+      $('.dropdown-toggle').hover( function() {
+
+          $('.dropdown.open').removeClass('open');
+          $(this).parent('.dropdown').addClass('open');
+      });
+      //    $('.dropdown-toggle').onClick( function() {
+      //
+      //      $(this).parent('.dropdown').addClass('open');
+      //    });
+  </script>
+<link rel="stylesheet" type="text/css" href="assets/stylesheets/UX.css" />
+<link rel="stylesheet" type="text/css" href="assets/stylesheets/restrictedElements.css" />
+
+<script src="assets/javascripts/utils.js"> </script>
+<script src="assets/javascripts/engine.js"></script>
+<script src="assets/javascripts/logix.js"></script>
+<script src="assets/javascripts/Plot.js"></script>
+<script src="assets/javascripts/Node.js"></script>
+<script src="assets/javascripts/wire.js"></script>
+<script src="assets/javascripts/subcircuit.js"></script>
+<script src="assets/javascripts/modules.js"></script>
+<script src="assets/javascripts/RGBLedMatrix.js"></script>
+<script src="assets/javascripts/sequential.js"></script>
+<script src="assets/javascripts/ram.js"></script>
+<script src="assets/javascripts/eeprom.js"></script>
+<script src="assets/javascripts/Counter.js"></script>
+<script src="assets/javascripts/canvasApi.js"></script>
+<script src="assets/javascripts/data.js"></script>
+<script src="assets/javascripts/listeners.js"></script>
+<script src="assets/javascripts/eventQueue.js"></script>
+<script src="assets/javascripts/miniMap.js"></script>
+<script src="assets/javascripts/layout.js"></script>
+<script src="assets/javascripts/testBench.js"></script>
+<script src="assets/javascripts/verilog.js"></script>
+<script type="text/javascript" src="assets/javascripts/metadata.json"></script>
+<script src="assets/javascripts/combinationalAnalysis.js"></script>
+<script src="assets/javascripts/Quin_McCluskey.js"></script>
+<script src="assets/javascripts/canvas2svg.js"></script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "CircuitVerse-Simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "postinstall": "electron-builder install-app-deps",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": "https://github.com/circuitverse/circuitverse",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^7.1.11",
+    "electron-builder": "^22.3.2"
+  }
+}

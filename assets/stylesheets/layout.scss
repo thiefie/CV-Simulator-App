@@ -1,0 +1,62 @@
+// All the custom class styles
+
+.simulator {
+  border: 2px solid $green;
+  font-weight: 500;
+  &:hover {
+    color: $color-hover;
+    background: $active-background;
+  }
+}
+
+.logo {
+  height: 25px;
+}
+
+.navbar-light .navbar-nav {
+  .nav-item {
+    .nav-link {
+      color: $primary;
+      font-weight: 500;
+    }
+
+    &.active {
+      border-bottom: 2px solid $green;
+    }
+  }
+  .nav-social-icons {
+    align-items: center;
+    display: flex;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+
+    a {
+      padding: 0 .3rem;
+    }
+
+    img {
+      height: 1.9rem;
+      margin: 0;
+      object-fit: contain;
+      padding: 0;
+      width: 1.9rem;
+    }
+  }
+}
+
+.footer-logo-iiitb {
+  width: 85%;
+}
+
+.footer-logo-DO {
+  width: 100%;
+  padding-top: 8%;
+}
+
+.footer-logo-istudio {
+  width: 75%;
+}
+
+.footer-logo-zense {
+  width: 75%;
+}
